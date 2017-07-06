@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_myjunit_main" default="compile.module.myjunit_main">
+  <dirname property="module.myjunit_main.basedir" file="${ant.file.module_myjunit_main}"/>
+  
+  <property name="module.jdk.home.myjunit_main" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.myjunit_main" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.myjunit_main" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.myjunit_main" value="-encoding UTF-8 -source 8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="myjunit_main.output.dir" value="${module.myjunit_main.basedir}/../../build/classes/main"/>
+  <property name="myjunit_main.testoutput.dir" value="${module.myjunit_main.basedir}/../../build/classes/main"/>
+  
+  <path id="myjunit_main.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="myjunit_main.module.production.classpath">
+    <path refid="${module.jdk.classpath.myjunit_main}"/>
+    <path refid="library.gradle:_junit:junit:4.12.classpath"/>
+  </path>
+  
+  <path id="myjunit_main.runtime.production.module.classpath">
+    <pathelement location="${myjunit_main.output.dir}"/>
+    <path refid="library.gradle:_junit:junit:4.12.classpath"/>
+  </path>
+  
+  <path id="myjunit_main.module.classpath">
+    <path refid="${module.jdk.classpath.myjunit_main}"/>
+    <pathelement location="${myjunit_main.output.dir}"/>
+    <path refid="library.gradle:_junit:junit:4.12.classpath"/>
+  </path>
+  
+  <path id="myjunit_main.runtime.module.classpath">
+    <pathelement location="${myjunit_main.output.dir}"/>
+    <path refid="library.gradle:_junit:junit:4.12.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.myjunit_main">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.myjunit_main">
+    <patternset refid="excluded.from.module.myjunit_main"/>
+  </patternset>
+  
+  <path id="myjunit_main.module.sourcepath">
+    <dirset dir="${module.myjunit_main.basedir}/../../src/main">
+      <include name="java"/>
+      <include name="resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.myjunit_main" depends="compile.module.myjunit_main.production,compile.module.myjunit_main.tests" description="Compile module myJunit_main"/>
+  
+  <target name="compile.module.myjunit_main.production" depends="register.custom.compilers" description="Compile module myJunit_main; production classes">
+    <mkdir dir="${myjunit_main.output.dir}"/>
+    <javac2 destdir="${myjunit_main.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.myjunit_main}/javac">
+      <compilerarg line="${compiler.args.myjunit_main}"/>
+      <bootclasspath refid="myjunit_main.module.bootclasspath"/>
+      <classpath refid="myjunit_main.module.production.classpath"/>
+      <src refid="myjunit_main.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.myjunit_main"/>
+    </javac2>
+    
+    <copy todir="${myjunit_main.output.dir}">
+      <fileset dir="${module.myjunit_main.basedir}/../../src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.myjunit_main.basedir}/../../src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.myjunit_main.tests" depends="register.custom.compilers,compile.module.myjunit_main.production" description="compile module myJunit_main; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.myjunit_main" description="cleanup module">
+    <delete dir="${myjunit_main.output.dir}"/>
+    <delete dir="${myjunit_main.testoutput.dir}"/>
+  </target>
+</project>
